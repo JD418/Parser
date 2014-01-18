@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><Objectss><resources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="/usr/share/xml/vnx/vnx-2.00.xsd">
+
+  <net mode="virtual_bridge" name="Net0"/>
+  <net mode="virtual_bridge" name="Net1"/>
+  <net mode="virtual_bridge" name="Net2"/>
+  <net mode="virtual_bridge" name="Net3"/>
+
+  <vm name="h1" os="linux" subtype="kvm" type="libvirt">
+    <filesystem type="cow">/usr/share/vnx/filesystems/rootfs_ubuntu-gui</filesystem>
+    <mem>384M</mem>
+    <console display="yes" id="0"/>
+    <console display="no" id="1"/>
+    <if id="1" net="Net0">
+      <ipv4>10.0.0.2/24</ipv4>
+    </if>
+    <route gw="10.0.0.1" type="ipv4">default</route>
+    
+    <filetree root="/tmp" seq="vnxtxt">conf/txtfile</filetree>
+
+    <!-- Start xeyes application -->
+    <exec ostype="xexec" seq="xeyes" type="verbatim">xeyes</exec>
+
+    <!-- Start xeyes application and wait until it is closed -->
+    <exec ostype="xsystem" seq="xeyes2" type="verbatim">xeyes</exec>
+
+    <!-- Start gedit, maximize the window and show a text file -->
+    <exec ostype="system" seq="vnxtxt" type="verbatim">chmod 666 /tmp/vnx.txt</exec>
+    <exec ostype="xexec" seq="vnxtxt" type="verbatim">gedit /tmp/vnx.txt</exec>
+    <exec ostype="xexec" seq="vnxtxt" type="verbatim">sleep 3; wmctrl -r vnx.txt -b add,maximized_vert,maximized_horz</exec>
+    <exec ostype="system" seq="vnxtxtoff" type="verbatim">pkill gedit; rm /tmp/vnx.*</exec>
+
+    <!-- Start firefox and connect to h3 web server -->
+    <exec ostype="xexec" seq="www-h3" type="verbatim">firefox http://10.0.2.2</exec>
+    <exec ostype="system" seq="www-h3-off" type="verbatim">pkill firefox</exec>
+
+    <!-- Start calculator  -->
+    <exec ostype="xexec" seq="calc" type="verbatim">gcalctool</exec>
+    <exec ostype="system" seq="calcoff" type="verbatim">pkill gcalctool</exec>
+   
+  </vm>
+
+  <vm name="h2" os="linux" subtype="kvm" type="libvirt">
+    <filesystem type="cow">/usr/share/vnx/filesystems/rootfs_ubuntu</filesystem>
+    <mem>128M</mem>
+    <if id="1" net="Net0">
+      <ipv4>10.0.0.3/24</ipv4>
+    </if>
+    <route gw="10.0.0.1" type="ipv4">default</route>
+  </vm>
+
+  <vm name="r1" os="linux" subtype="kvm" type="libvirt">
+    <filesystem type="cow">/usr/share/vnx/filesystems/rootfs_ubuntu</filesystem>
+    <mem>128M</mem>
+    <if id="1" net="Net0">
+      <ipv4>10.0.0.1/24</ipv4>
+    </if>
+    <if id="2" net="Net1">
+      <ipv4>10.0.1.1/24</ipv4>
+    </if>
+    <if id="3" net="Net3">
+      <ipv4>10.0.3.1/24</ipv4>
+    </if>
+    <route gw="10.0.1.2" type="ipv4">10.0.2.0/24</route>
+    <forwarding type="ip"/>
+  </vm>
+
+  <vm name="r2" os="linux" subtype="kvm" type="libvirt">
+    <filesystem type="cow">/usr/share/vnx/filesystems/rootfs_ubuntu</filesystem>
+    <mem>128M</mem>
+    <if id="1" name="s1/0" net="Net1">
+      <ipv4>10.0.1.2/24</ipv4>
+    </if>
+    <if id="2" name="e0/0" net="Net2">
+      <ipv4>10.0.2.1/24</ipv4>
+    </if>
+    <route gw="10.0.1.1" type="ipv4">default</route>
+    <forwarding type="ip"/>
+  </vm>
+
+  <vm name="h3" os="linux" subtype="kvm" type="libvirt">
+    <filesystem type="cow">/usr/share/vnx/filesystems/rootfs_ubuntu</filesystem>
+   <mem>128M</mem>
+   <if id="1" net="Net2">
+      <ipv4>10.0.2.2/24</ipv4>
+    </if>
+    <route gw="10.0.2.1" type="ipv4">default</route>
+    <!-- Copy the files under conf/tutorial_ubuntu/h3 to vm /var/www directory -->
+    <filetree root="/var/www" seq="start-www">conf/tutorial_ubuntu/h3</filetree>
+    <!-- Start/stop apache www server -->
+    <exec ostype="system" seq="start-www" type="verbatim">chmod 644 /var/www/*</exec>
+    <exec ostype="system" seq="start-www" type="verbatim">service apache2 start</exec>
+    <exec ostype="system" seq="stop-www" type="verbatim">service apache2 stop</exec>    
+  </vm>
+  
+  <vm name="h4" os="linux" subtype="kvm" type="libvirt">
+    <filesystem type="cow">/usr/share/vnx/filesystems/rootfs_ubuntu</filesystem>
+    <mem>128M</mem>
+    <if id="1" net="Net2">
+      <ipv4>10.0.2.3/24</ipv4>
+    </if>
+    <route gw="10.0.2.1" type="ipv4">default</route>    
+    <!-- Copy the files under conf/tutorial_ubuntu/h4 to vm /var/www directory -->
+    <filetree root="/var/www" seq="start-www">conf/tutorial_ubuntu/h4</filetree>
+    <!-- Start/stop apache www server -->
+    <exec ostype="system" seq="start-www" type="verbatim">chmod 644 /var/www/*</exec>
+    <exec ostype="system" seq="start-www" type="verbatim">service apache2 start</exec>
+    <exec ostype="system" seq="stop-www" type="verbatim">service apache2 stop</exec>    
+  </vm>
+  
+  <host>
+    <hostif net="Net3">
+       <ipv4>10.0.3.2/24</ipv4>
+    </hostif>
+    <route gw="10.0.3.1" type="ipv4">10.0.0.0/16</route>
+  </host>
+
+<private_net><type>OS::Neutron::Net</type><properties><name>VNX</name></properties></private_net><router><type>OS::Neutron::Router</type></router><router_gateway><type>OS::Neutron::RouterGateway</type><properties><router_id><get_resource>router</get_resource></router_id><network_id>d72f0f5f-d4b2-490a-bfb2-71a584c4e39c</network_id></properties></router_gateway><server0><type>OS::Nova::Server</type><properties/></server0><server1><type>OS::Nova::Server</type><properties/></server1><server2><type>OS::Nova::Server</type><properties/></server2><server3><type>OS::Nova::Server</type><properties/></server3><server4><type>OS::Nova::Server</type><properties/></server4></resources><heat_template_version>2013-09-09</heat_template_version><description>tutorial_ubuntu</description></Objectss>
