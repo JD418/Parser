@@ -1,0 +1,16 @@
+<!--
+
+~~~~~~~~~~~~~~~~~~~~
+VNX Openstack
+~~~~~~~~~~~~~~~~~~~~
+
+Descripcion: La tipologia de red en Openstack trabaja con un enrutador por escenario o tenant que permite la creacion de redes
+ 	     a nivel de capa 3. Sin embargo, si considera necesario que los enrutadores especificados en el archivo de 
+	     configuracion .XML en VNX esten presentes en Openstack, debe especificar "Si" dentro del tag routers, de lo contrario, especificar "No".
+
+-->
+
+
+<vnxo>
+    <routers>Si</routers>
+</vnxo>
