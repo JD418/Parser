@@ -4,13 +4,18 @@
 VNX Openstack
 ~~~~~~~~~~~~~~~~~~~~
 
-Descripcion: La tipologia de red en Openstack trabaja con un enrutador por escenario o tenant que permite la creacion de redes
- 	     a nivel de capa 3. Sin embargo, si considera necesario que los enrutadores especificados en el archivo de 
-	     configuracion .XML en VNX esten presentes en Openstack, debe especificar "Si" dentro del tag routers, de lo contrario, especificar "No".
+Especificaciones: La tipologia de red en Openstack trabaja con un enrutador por escenario o tenant que permite la creacion de redes
+ 	     	  a nivel de capa 3. Sin embargo, si considera necesario que los enrutadores especificados en el archivo de 
+	     	  configuracion .XML en VNX esten presentes en Openstack, debe especificar "Si" dentro del tag routers, de lo contrario, especificar 			  "No".
 
+		  Si solo se coloca una imagen o flavor, estos estarán en todas las máquinas virtuales a desplegar. En caso de que se coloquen más de 			  una imagen o más de un flavor, se debe colocar el número de images o flavors igual al número de máquinas virtuales.
 -->
 
 
 <vnxo>
-    <routers>Si</routers>
+    <router>Virtual_Router</router>
+    <router>Instance</router>
+    <imagen>Cirros 0.3.1</imagen>	
+    <flavor>m1.tiny</flavor>
+
 </vnxo>
