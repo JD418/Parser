@@ -597,11 +597,11 @@ public class Test {
 					getress.appendChild(doc.createTextNode(privanets.get(i6-i1000)));
 					networkidd.appendChild(getress);
 					
-					Element securityser = doc.createElement("security_groups");
-					propertiesn.appendChild(securityser);
-					Element getsecur = doc.createElement("get_resource");
-					getsecur.appendChild(doc.createTextNode("securitygroup"));
-					securityser.appendChild(getsecur);
+			//		Element securityser = doc.createElement("security_groups");
+			//		propertiesn.appendChild(securityser);
+			//		Element getsecur = doc.createElement("get_resource");
+			//		getsecur.appendChild(doc.createTextNode("securitygroup"));
+			//		securityser.appendChild(getsecur);
 					
 					
 					
@@ -687,11 +687,11 @@ public class Test {
 					getress.appendChild(doc.createTextNode(nethost.get(i10)));
 					networkidd.appendChild(getress);
 					
-					Element securityser = doc.createElement("security_groups");
-					propertiesn.appendChild(securityser);
-					Element getsecur = doc.createElement("get_resource");
-					getsecur.appendChild(doc.createTextNode("securitygroup"));
-					securityser.appendChild(getsecur);
+		//			Element securityser = doc.createElement("security_groups");
+		//			propertiesn.appendChild(securityser);
+		//			Element getsecur = doc.createElement("get_resource");
+		//			getsecur.appendChild(doc.createTextNode("securitygroup"));
+		//			securityser.appendChild(getsecur);
 					
 					Element fixesips = doc.createElement("fixed_ips");
 				    propertiesn.appendChild(fixesips);
