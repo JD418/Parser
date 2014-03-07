@@ -1,4 +1,3 @@
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -299,7 +298,8 @@ public class Test {
 				    int jaja = oo.getLength();
 				    Node vms = names.getChildNodes().item(jaja-2);
 				    String hh = vms.getNodeName(); 
-				   
+				    interfaces44.clear();
+				    
 				    if (hh!="forwarding"){ 
 				    	Element vmss = (Element)doc.getElementsByTagName("vm").item(iw);
 				    	Node haha = vmss.getElementsByTagName("if").item(0);
@@ -311,6 +311,48 @@ public class Test {
 				    else {
 				    	
 				    	if (listrecorte.get(regu).equals("Virtual_Router")==true){
+				    	Element routerss = doc.createElement("router" + iw);
+						resource.appendChild(routerss);
+						Element typerout = doc.createElement("type");
+						typerout.appendChild(doc.createTextNode("OS::Neutron::Router"));
+						routerss.appendChild(typerout);
+						Element gateways = doc.createElement("router_gateway" + iw);
+						resource.appendChild(gateways);
+						Element typegate = doc.createElement("type");
+						typegate.appendChild(doc.createTextNode("OS::Neutron::RouterGateway"));
+						gateways.appendChild(typegate);
+						Element propergate = doc.createElement("properties");
+						gateways.appendChild(propergate);
+						Element routeridga = doc.createElement("router_id");
+						propergate.appendChild(routeridga);				
+						Element getregate = doc.createElement("get_resource");
+						getregate.appendChild(doc.createTextNode("router"+ iw));
+						routeridga.appendChild(getregate);
+						Element networkidgate = doc.createElement("network_id");
+						networkidgate.appendChild(doc.createTextNode("d72f0f5f-d4b2-490a-bfb2-71a584c4e39c"));
+						propergate.appendChild(networkidgate);
+				    	
+						Element routers22 = (Element)doc.getElementsByTagName("vm").item(iw);
+				    	NodeList haha22 = routers22.getElementsByTagName("if");
+				    	
+				    	for (int jodm=0;jodm<haha22.getLength();jodm++){
+				    	Node haha23 = routers22.getElementsByTagName("if").item(jodm);
+				    	NamedNodeMap hihi22 = haha23.getAttributes();
+				    	Node jojoo22 = hihi22.getNamedItem("net");
+				    	String oas = jojoo22.getTextContent().toLowerCase();
+				    	
+				    	Node gate = routers22.getElementsByTagName("ipv4").item(jodm);
+				    	String gat22 = gate.getTextContent();
+				    	String gat23 =gat22.replace("/24", "");
+				    	
+				    	String router33 = "router" + iw;
+				    	interfaces22.add(oas);
+				    	routers23.add(router33);
+				    	gatewaysnet.add(gat23);
+				    	}
+				    					    	
+				    }
+				    else if (listrecorte.get(regu).equals("Instance")==true){
 				    	Element routerss = doc.createElement("router" + iw);
 						resource.appendChild(routerss);
 						Element typerout = doc.createElement("type");
@@ -370,6 +412,7 @@ public class Test {
 						Element networks = doc.createElement("networks");
 						propertiese.appendChild(networks);
 						
+						
 						Element routers22 = (Element)doc.getElementsByTagName("vm").item(iw);
 				    	NodeList haha22 = routers22.getElementsByTagName("if");
 						
@@ -387,41 +430,26 @@ public class Test {
 					    	interfaces33.add(oas);
 					    	routers33.add(router33);
 					    	gatewaysnet33.add(gat23);
+					    	interfaces44.add(oas);
 						}
 				    	
-				    	for (int ya=0;ya < interfaces33.size();ya++){
+				    	for (int ya=0;ya < interfaces44.size();ya++){
+				    		
 				    		Element port = doc.createElement("mm");
 							networks.appendChild(port);
 							Element port22 = doc.createElement("port");
 							port.appendChild(port22);
 							Element getres = doc.createElement("get_resource");
-							getres.appendChild(doc.createTextNode("port_router"+ya));
+							if (interfaces44.size()<interfaces33.size()){
+							int hj = ya+interfaces33.size()-interfaces44.size();
+							getres.appendChild(doc.createTextNode("port_router"+hj));}
+							else{
+							getres.appendChild(doc.createTextNode("port_router"+ya));	
+							}
+							
 							port22.appendChild(getres);
 							
-							Element serverports = doc.createElement("port_router"+ya);
-							resource.appendChild(serverports);
-							Element typen = doc.createElement("type");
-							typen.appendChild(doc.createTextNode("OS::Neutron::Port"));
-							serverports.appendChild(typen);
-							Element propertiesn = doc.createElement("properties");
-							serverports.appendChild(propertiesn);
-							Element networkidd = doc.createElement("network_id");
-							propertiesn.appendChild(networkidd);
-							Element getress = doc.createElement("get_resource");
-							getress.appendChild(doc.createTextNode("private_"+interfaces33.get(ya)));
-							networkidd.appendChild(getress);
 							
-							Element fixesips = doc.createElement("fixed_ips");
-							propertiesn.appendChild(fixesips);
-							Element gatewayip = doc.createElement("ip_address");
-							fixesips.appendChild(gatewayip);
-							gatewayip.appendChild(doc.createTextNode(gatewaysnet33.get(ya)));
-							
-						    Element subnetidporti = doc.createElement("subnet_id");
-						    fixesips.appendChild(subnetidporti);
-						    Element getresss = doc.createElement("get_resource");	    
-							getresss.appendChild(doc.createTextNode("private_sub"+interfaces33.get(ya)));
-							subnetidporti.appendChild(getresss);
 				    	}
 						
 						
@@ -460,6 +488,38 @@ public class Test {
 				    	regu++;
 				    }
 				   
+				}
+				
+				for (int ya=0;ya < interfaces33.size();ya++){
+					
+					
+					Element serverports = doc.createElement("port_router"+ya);
+					resource.appendChild(serverports);
+					Element typen = doc.createElement("type");
+					typen.appendChild(doc.createTextNode("OS::Neutron::Port"));
+					serverports.appendChild(typen);
+					Element propertiesn = doc.createElement("properties");
+					serverports.appendChild(propertiesn);
+					Element networkidd = doc.createElement("network_id");
+					propertiesn.appendChild(networkidd);
+					Element getress = doc.createElement("get_resource");
+					getress.appendChild(doc.createTextNode("private_"+interfaces33.get(ya)));
+					networkidd.appendChild(getress);
+					
+					Element fixesips = doc.createElement("fixed_ips");
+					propertiesn.appendChild(fixesips);
+					Element gatewayip = doc.createElement("ip_address");
+					fixesips.appendChild(gatewayip);
+					gatewayip.appendChild(doc.createTextNode(gatewaysnet33.get(ya)));
+					
+				    Element subnetidporti = doc.createElement("subnet_id");
+				    fixesips.appendChild(subnetidporti);
+				    Element getresss = doc.createElement("get_resource");	    
+					getresss.appendChild(doc.createTextNode("private_sub"+interfaces33.get(ya)));
+					subnetidporti.appendChild(getresss);
+					
+					
+					
 				}
 				
 				for (int ya=0;ya < interfaces22.size();ya++){
